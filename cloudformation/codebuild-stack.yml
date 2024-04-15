@@ -62,7 +62,7 @@ Resources:
         Type: GITHUB
         Location: https://github.com/Wylogee/static-website.git
         GitCloneDepth: 1
-        BuildSpec: frontend/buildspec.yml
+        BuildSpec: frontend/my-angular-app/buildspec.yml
         Auth:
           Resource: !Ref myCodeBuildSourceCredential
           Type: OAUTH
