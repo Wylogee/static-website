@@ -11,7 +11,7 @@ Resources:
     Type: 'AWS::S3::Bucket'
     DeletionPolicy: Delete #allow CloudFormation delete the bucket when stack is deleted
     Properties:
-      BucketName: angular-app-bucket
+      BucketName: my-angular-app-bucket
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: error.html
@@ -60,7 +60,7 @@ Resources:
       Description: CodeBuild project for automatically build of static website hosted on s3
       Source:
         Type: GITHUB
-        Location: https://github.com/Wylogee/StaticWebsiteHostingToS3.git
+        Location: https://github.com/Wylogee/static-website.git
         GitCloneDepth: 1
         BuildSpec: frontend/buildspec.yml
         Auth:
@@ -80,7 +80,7 @@ Resources:
       Artifacts: # drop the build artifacts of S3 bucket that hosts static website
         Type: S3
         Name: '/' # store the artifact in the root of the output bucket
-        Location: !Sub arn:aws:s3:::angular-app-bucket
+        Location: !Sub arn:aws:s3:::my-angular-app
         EncryptionDisabled: True #disable the encryption of artifacts in a build to see html pages
       LogsConfig:
         CloudWatchLogs:
@@ -114,8 +114,8 @@ Resources:
                   - logs:PutLogEvents
                 Effect: Allow
                 Resource:
-                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:angular-app-CloudWatchLogs
-                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:angular-app-CloudWatchLogs:*
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:my-angular-app-CloudWatchLogs
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:my-angular-app-CloudWatchLogs:*
               # statement to access S3 bucket that hosts static website (CodeBuild will save Artifacts there)
               - Action:
                   - s3:PutObject
@@ -125,8 +125,8 @@ Resources:
                   - s3:GetBucketLocation
                 Effect: Allow
                 Resource:
-                  - arn:aws:s3:::angular-app-bucket
-                  - arn:aws:s3:::angular-app-bucket/*
+                  - arn:aws:s3:::my-angular-app
+                  - arn:aws:s3:::my-angular-app/*
 Outputs:
   outputWebsiteURL:
     Value: !GetAtt 
