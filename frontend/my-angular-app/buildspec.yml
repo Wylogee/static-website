@@ -1,0 +1,29 @@
+version: 0.2
+env:
+  variables:
+    APP_ENV: 'prod'
+phases:
+  # use the install phase only for installing packages in the build environment
+  install:
+    runtime-versions:
+       nodejs: 18
+    commands:
+      - echo Install Angular CLI and all node_modules 
+      - cd $CODEBUILD_SRC_DIR/frontend/my-angular-app
+      - npm install && npm install -g @angular/cli
+  build:
+    commands:
+      - echo Build process started now
+      - cd $CODEBUILD_SRC_DIR/frontend/my-angular-app
+      - ng build --configuration=production
+  post_build:
+    commands:
+      - echo Build process finished, upload artifacts to S3 bucket
+      - cd dist/my-angular-app
+      - ls -la
+artifacts:
+  #  get files within the dist folder only
+  base-directory: 'frontend/my-angular-app/dist*'
+  discard-paths: yes
+  files:
+    - '**/*'  
